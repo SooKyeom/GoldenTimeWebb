@@ -1,5 +1,11 @@
 <?php
+header("Content-Type: text/html; charset=utf-8");
+
 $conn = mysqli_connect("10.1.4.110", "root", "123456", "user" ,3306);
+
+$conn->query("set session character_set_connection=utf8;");
+$conn->query("set session character_set_results=utf8;");
+$conn->query("set session character_set_client=utf8;");
 // $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
 // echo $hashedPassword;
 $sql = "

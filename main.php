@@ -1,5 +1,11 @@
 <?php
 session_start();
+header("Content-Type: text/html; charset=utf-8");
+$conn = mysqli_connect("10.1.4.110", "root", "123456", "user", 3306);
+$conn->query("set session character_set_connection=utf8;");
+$conn->query("set session character_set_results=utf8;");
+$conn->query("set session character_set_client=utf8;");
+$list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 ?>
 
 <!DOCTYPE html>
@@ -47,37 +53,47 @@ session_start();
 
 <div id="wrapper">
     <div id="sideBar"> <!-- SideBar -->
-        <a class="sidebar-brand">
+        <a class="sidebar-brand" href="main.php">
             <div>미아위치확인시스템</div>
         </a>
         <hr class="sidebar-divide">
-        <a class="sidebar-brand">
-            <div>gt-001</div>
-        </a>
-        <a class="sidebar-brand">
-            <div>gt-002</div>
-        </a>
-        <a class="sidebar-brand">
-            <div>gt-003</div>
-        </a>
+
+        <?php
+        while ($row = mysqli_fetch_array($list_result)) {
+            echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>".'GT-00'.$row['kid_sn']."</div></a>";
+//            echo "<hr class='sidebar-divide'>";
+        }
+        $numb = (string) $_SERVER['REQUEST_URI'];
+        $num = substr($numb, 14, 2);
+        ?>
+
+        <!--        <a class="sidebar-brand">-->
+        <!--            <div>gt-001</div>-->
+        <!--        </a>-->
+        <!--        <a class="sidebar-brand">-->
+        <!--            <div>gt-002</div>-->
+        <!--        </a>-->
+        <!--        <a class="sidebar-brand">-->
+        <!--            <div>gt-003</div>-->
+        <!--        </a>-->
     </div>
     <ul class="nav justify-content-end">
-    <?php
-    if (isset($_SESSION['userID'])) {
-        echo "{$_SESSION['userID']}님 환영합니다  ";
-        ?>
-        <button class="nav-item d-flex" style="float: right; margin-right: 20px" onclick="logout()">로그아웃</button>
         <?php
-    } else {
+        if (isset($_SESSION['userID'])) {
+            echo "{$_SESSION['userID']}님 환영합니다  ";
+            ?>
+            <button class="nav-item d-flex" style="float: right; margin-right: 20px" onclick="logout()">로그아웃</button>
+            <?php
+        } else {
+            ?>
+
+            <button class="nav-link" style="float: right; margin-right: 20px" onclick="login()">로그인</button>
+            <button class="nav-link active" style="float: right; margin-right: 10px" onclick="register()">회원가입</button>
+
+
+            <?php
+        }
         ?>
-
-        <button class="nav-link" style="float: right; margin-right: 20px" onclick="login()">로그인</button>
-        <button class="nav-link active" style="float: right; margin-right: 10px" onclick="register()">회원가입</button>
-        
-
-        <?php
-    }
-    ?>
     </ul>
     <div id="content-wrapper" style="padding-right: 1.5rem;">
         <div style="flex-basis: 0; flex-grow: 1; max-width: 100%;"> <!-- col -->
@@ -85,12 +101,12 @@ session_start();
                 <div style="flex: 0 0 68%; max-width: 68%;">
                     <div class="card" style="margin-bottom: 10px;">
                         <div class="card-head">
-                            place for GPS
+                            GPS 위치 확인
                         </div>
                         <div class="card-body" id="map" style="width: 100%;">
                             <!--    지도 넣기    -->
 
-                            <div id="googleMap" style="width: 98%;height: 700px;"></div>
+                            <div id="googleMap" style="width: 97%;height: 700px;"></div>
 
                             <script>
                                 function myMap(){
@@ -110,7 +126,7 @@ session_start();
                     </div>
                     <div class="card">
                         <div class="card-head">
-                            place for CCTV
+                            CCTV 화면 확인
                         </div>
                         <div class="card-body">
                             <iframe width="100%" height="600px" src="https://www.youtube.com/embed/-JhoMGoAfFc?autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -122,19 +138,29 @@ session_start();
                 <div style="flex: 0 0 30%; max-width: 30%;">
                     <div class="card">
                         <div class="card-head">
-                            place for child's information
-                        </div>
-                        <div>
-                            place for child's photo
+                            아동 정보 확인
                         </div>
                         <div class="card-body" style="text-align: center;">
+                            <div>
+                                place for child's photo
+                            </div>
                             <table class="table">
                                 <tr>
                                     <td>
                                         이름
                                     </td>
                                     <td>
-                                        김ㅇㅇ
+                                        <?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            echo $row['kid_nm'];
+                                        } else {
+                                            echo "아동 이름";
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -142,7 +168,21 @@ session_start();
                                         성별
                                     </td>
                                     <td>
-                                        남자
+                                        <?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            if ($row['kid_gend'] == 'M') {
+                                                echo '남자';
+                                            } else if ($row['kid_gend'] == 'F') {
+                                                echo '여자';
+                                            }
+                                        } else {
+                                            echo "성별";
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -150,7 +190,23 @@ session_start();
                                         생년월일
                                     </td>
                                     <td>
-                                        2018년 03월 19일
+                                        <?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            $bday = (string)$row['kid_bir'];
+                                            echo substr($bday, 0, 4);
+                                            echo "년 ";
+                                            echo substr($bday, 5, 2);
+                                            echo '월 ';
+                                            echo substr($bday, 8, 2);
+                                            echo '일';
+                                        } else {
+                                            echo "생년월일";
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -158,7 +214,17 @@ session_start();
                                         보호자 이름
                                     </td>
                                     <td>
-                                        김ㅇㅇ
+                                        <?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            echo $row['kid_guard_nm'];
+                                        } else {
+                                            echo "보호자 이름";
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -166,7 +232,17 @@ session_start();
                                         보호자 연락처1
                                     </td>
                                     <td>
-                                        010-1234-1234
+                                        <?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            echo $row['kid_guard_tel1'];
+                                        } else {
+                                            echo "보호자 연락처1";
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -174,7 +250,21 @@ session_start();
                                         보호자 연락처2
                                     </td>
                                     <td>
-                                        010-5678-1234
+                                        <?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            if ($row['kid_guard_tel2']) {
+                                                echo $row['kid_guard_tel2'];
+                                            } else {
+                                                echo "없음";
+                                            }
+                                        } else {
+                                            echo "보호자 연락처2";
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                             </table>
