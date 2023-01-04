@@ -1,6 +1,6 @@
 <?php
 session_start();
-header("Content-Type: text/html; charset=utf-8");
+//header("Content-Type: text/html; charset=utf-8");
 $conn = mysqli_connect("10.1.4.110", "root", "123456", "user", 3306);
 $conn->query("set session character_set_connection=utf8;");
 $conn->query("set session character_set_results=utf8;");
@@ -103,21 +103,28 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         <div class="card-head">
                             GPS 위치 확인
                         </div>
-                        <div class="card-body" id="map" style="width: 100%;">
+                        <div class="card-body" id="map">
                             <!--    지도 넣기    -->
 
-                            <div id="googleMap" style="width: 97%;height: 700px;"></div>
+                            <div id="googleMap" style="width: 100%; height: 600px;"></div>
 
                             <script>
                                 function myMap(){
+                                    var gps = {lat: 35.8774, lng: 128.736};
+
                                     var mapOptions = {
-                                        center:new google.maps.LatLng(35.8295049, 128.5651016),
-                                        zoom:10
+                                        center: gps,
+                                        zoom:18
                                     };
 
                                     var map = new google.maps.Map(
                                         document.getElementById("googleMap")
                                         , mapOptions );
+
+                                    var marker = new google.maps.Marker({
+                                        position: gps,
+                                        map: map,
+                                    });
                                 }
                             </script>
                             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApykNjXopqxczFpW4EfkZIwMm5y9ms0B8&callback=myMap"></script>
@@ -129,7 +136,8 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                             CCTV 화면 확인
                         </div>
                         <div class="card-body">
-                            <iframe width="100%" height="600px" src="https://www.youtube.com/embed/-JhoMGoAfFc?autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="600px" src="https://www.youtube.com/embed/GDzBj6gzqHw?autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <!--                            <iframe width="100%" height="600px" src="https://www.youtube.com/embed/-JhoMGoAfFc?autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
                         </div>
                     </div>
                 </div>
@@ -142,7 +150,22 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         </div>
                         <div class="card-body" style="text-align: center;">
                             <div>
-                                place for child's photo
+                                place for child's photo <br>
+                                <?php
+                                $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                if ($num) {
+                                    for ($i = 0; $i < $num; $i++) {
+                                        $row = mysqli_fetch_array($list_result);
+                                    }
+//                                    echo $row['upload'];
+                                    /*                                    $src = "D:/xampp/htdocs/images/<?=".$row['image_name']."?>";*/
+//                                    Header("Content-type:image/jpeg");
+                                    echo $row['kid_nm'];
+//                                    echo $row['upload'];
+                                } else {
+                                    echo "사진 없음";
+                                }
+                                ?>
                             </div>
                             <table class="table">
                                 <tr>
