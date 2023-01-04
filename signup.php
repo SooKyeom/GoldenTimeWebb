@@ -28,18 +28,24 @@
             <input type="password" class="form-control" id="password-check" placeholder="비밀번호를 입력해 주세요.">
         </div>
 
-        <div class="mb-3 ">
-            <label for="tel" class="form-label">전화번호(보호자)</label>
-            <input name="tel" type="tel" class="form-control" id="tel" placeholder="전화번호를 입력해 주세요.">
-        </div>
+        <!--        <div class="mb-3 ">-->
+        <!--            <label for="tel" class="form-label">전화번호(보호자)</label>-->
+        <!--            <input name="tel" type="tel" class="form-control" id="tel" placeholder="전화번호를 입력해 주세요.">-->
+        <!--        </div>-->
 
         <div class="mb-3 ">
-            <label for="name" class="form-label">이름(보호자)</label>
+            <label for="name" class="form-label">이름</label>
             <input name="name" type="name" class="form-control" id="name" placeholder="이름을 입력해 주세요.">
         </div>
 
+        <div class="mb-3 ">
+            <legend>회원 구분</legend>
+            <input type="radio" name="radio" value="01" checked="checked"/>일반 회원
+            <input type="radio" name="radio" value="02"/>관리자
+        </div>
+
         <button type="button" id="signup-button" class="btn btn-primary mb-3">회원가입
-        <button type="button" id="back-button" class="btn btn-primary mb-3" onclick="history.back();" />뒤로가기
+            <button type="button" id="back-button" class="btn btn-primary mb-3" onclick="history.back();" />뒤로가기
 
     </div>
 </form>

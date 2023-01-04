@@ -8,12 +8,12 @@ $userPass = $_POST['password'];
 // 이게 입력한 아이디와 비밀번호
 
 // DB 정보 가져오기
-$sql = "SELECT * FROM user WHERE userID ='{$userID}'";
+$sql = "SELECT * FROM tb_user WHERE user_id ='{$userID}'";
 $result = mysqli_query($conn, $sql);
 
 $row = mysqli_fetch_array($result);
 // $hashedPassword = $row['userPass'];
-$userPassword = $row['userPassword'];
+$userPassword = $row['user_pw'];
 $row['id'];
 
 foreach($row as $key => $r){
@@ -30,9 +30,9 @@ if ($userPass == $userPassword) {
     // 로그인 성공
     // 세션에 id 저장
     session_start();
-    $_SESSION['userID'] = $row['userID'];
+    $_SESSION['user_id'] = $row['user_id'];
     print_r($_SESSION);
-    echo $_SESSION['userID'];
+    echo $_SESSION['user_id'];
 
     ?>
     <script>

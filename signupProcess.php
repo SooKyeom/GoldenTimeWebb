@@ -9,9 +9,9 @@ $conn->query("set session character_set_client=utf8;");
 // $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
 // echo $hashedPassword;
 $sql = "
-    INSERT INTO user
-    (userID, userPassword, userNAME, userAge)
-    VALUES('{$_POST['id']}', '{$_POST['password']}', '{$_POST['name']}', '{$_POST['tel']}'
+    INSERT INTO tb_user
+    (user_id, user_pw, user_nm, user_type, rgtr_dt)
+    VALUES('{$_POST['id']}', '{$_POST['password']}', '{$_POST['name']}', '{$_POST['radio']}', NOW()
     );";
 echo $sql;
 $result = mysqli_query($conn, $sql);
