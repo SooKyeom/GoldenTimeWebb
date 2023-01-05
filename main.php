@@ -45,6 +45,26 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             border-collapse: collapse;width: 100%;
             height: 100%;
         }
+        .kidname {
+            background-color: #4285F4;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 14px;
+            padding: 10px 15px;
+            position: relative;
+        }
+        .kidname::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translate(-50%, 0);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #4285F4;
+        }
     </style>
 
 </head>
@@ -79,8 +99,8 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
     </div>
     <ul class="nav justify-content-end">
         <?php
-        if (isset($_SESSION['userID'])) {
-            echo "{$_SESSION['userID']}님 환영합니다  ";
+        if (isset($_SESSION['user_id'])) {
+            echo "{$_SESSION['user_id']}님 환영합니다  ";
             ?>
             <button class="nav-item d-flex" style="float: right; margin-right: 20px" onclick="logout()">로그아웃</button>
             <?php
@@ -106,28 +126,106 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         <div class="card-body" id="map">
                             <!--    지도 넣기    -->
 
+                            <?php
+                            $list_result = mysqli_query($conn, 'SELECT * FROM tb_map');
+                            if ($num) {
+                                for ($i = 0; $i < $num; $i++) {
+                                    $row = mysqli_fetch_array($list_result);
+                                }
+                                $lat = $row['lat'];
+//                                            echo "<br>";
+                                $lng = $row['lng'];
+//                                echo $row['lat'], $row['lng'];
+                            } else {
+                                $lat = '35.8774';
+                                $lng = '128.73';
+                            }
+                            ?>
+
+
                             <div id="googleMap" style="width: 100%; height: 600px;"></div>
 
                             <script>
                                 function myMap(){
-                                    var gps = {lat: 35.8774, lng: 128.736};
+
+                                    // var lat = '';
+                                    // lat = $("#lat").val();
+                                    // var lng = '';
+                                    // lng = $("#lng").val();
+
+                                    var lat = "<?php echo $lat; ?>";
+                                    var lng = "<?php echo $lng; ?>";
+
+                                    var gps = {lat: Number(lat), lng: Number(lng)};
 
                                     var mapOptions = {
                                         center: gps,
-                                        zoom:18
+                                        zoom:18,
+                                        mapId: "d3378d8bba3dcdc7",
                                     };
 
-                                    var map = new google.maps.Map(
-                                        document.getElementById("googleMap")
-                                        , mapOptions );
+                                    var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions,);
 
-                                    var marker = new google.maps.Marker({
-                                        position: gps,
+                                    // var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions, mapId: "d3378d8bba3dcdc7");
+
+                                    //var curPosition = document.createElement("div");
+                                    //// curPosition.className = "current-Position";
+                                    //curPosition.textContent = '<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">현재 위치</div><div><?php
+                                    //    $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                    //    if ($num) {
+                                    //        for ($i = 0; $i < $num; $i++) {
+                                    //            $row = mysqli_fetch_array($list_result);
+                                    //        }
+                                    //        echo $row['kid_nm'];
+                                    //    } else {
+                                    //        echo "아동 이름";
+                                    //    }
+                                    //    ?>//</div></div>';
+
+                                    const contentString = '<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">현재 위치</div><div><?php
+                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                        if ($num) {
+                                            for ($i = 0; $i < $num; $i++) {
+                                                $row = mysqli_fetch_array($list_result);
+                                            }
+                                            $kid = $row['kid_nm'];
+                                        } else {
+                                            $kid = "현재 위치";
+                                        }
+                                        echo $kid;
+                                        ?></div></div>';
+
+                                    const kidname = document.createElement("div");
+                                    kidname.className = "kidname";
+                                    kidname.textContent = String("<?php echo $kid; ?>");
+
+                                    // var marker = new google.maps.Marker({
+                                    //     map: map,
+                                    //     position: gps,
+                                    //     title: "현재 위치",
+                                    // });
+
+                                    const marker2 = new google.maps.marker.AdvancedMarkerView({
                                         map: map,
+                                        position: gps,
+                                        title: "현재 위치",
+                                        content: kidname,
+                                    });
+
+                                    var infowindow = new google.maps.InfoWindow({
+                                        content: contentString,
+                                        position: gps,
+                                    });
+
+                                    marker2.addListener("click", () => {
+                                        infowindow.open({
+                                            anchor: marker2,
+                                            map,
+                                        });
                                     });
                                 }
                             </script>
-                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApykNjXopqxczFpW4EfkZIwMm5y9ms0B8&callback=myMap"></script>
+                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApykNjXopqxczFpW4EfkZIwMm5y9ms0B8&callback=myMap&libraries=marker&v=beta"></script>
 
                         </div>
                     </div>
