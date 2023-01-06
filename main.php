@@ -14,6 +14,9 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
     <meta charset="UTF-8">
     <title>미아 방지 시스템</title>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2/firebase.js"></script>
+
     <style>
         #sideBar {
             background-color: #6c93f3; width: 200px; min-height: 100vh; position: relative; display: flex; flex-direction: column; padding-right: 0; margin-top: 0; margin-bottom: 0; list-style: none; float: right;
@@ -69,6 +72,56 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
 </head>
 <body>
+
+파이어베이스 실시간으로 웹페이지 연동하기 </br>
+Firebase + Realtime + Web
+<p id="demo">A Paragraph.</p>
+<pre id="object"></pre>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBc9keBPASHnCbnUq5sWcXX3CyrARXfNuI",
+        authDomain: "hustar12.firebaseapp.com",
+        databaseURL: "https://hustar12-default-rtdb.firebaseio.com",
+        projectId: "hustar12",
+        storageBucket: "hustar12.appspot.com",
+        messagingSenderId: "966960243579",
+        appId: "1:966960243579:web:14616ea187f3db846d13de",
+        measurementId: "G-7CBDNKJEBC"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    // firebase에서 읽기
+    var demo = document.getElementById("demo");
+    var preObject = document.getElementById("object");
+    var ltRef = firebase.database().ref("test/Latitude"); //.child("test/Latitude");
+
+    latt = 36;
+
+    console.log();
+
+    ltRef.on('value', snap => {demo.innerHTML = snap.val(); console.log(demo); latt = snap.val(); console.log(latt);});
+
+
+    // ltRef.on('value', snap => {demo.innerHTML = snap.val(); console.log(demo); latt = snap.val(); console.log(latt);});
+
+    // onValue(ltRef, (snapshot) => {demo.innerHTML = snap.val(); console.log(demo); latt = snap.val(); console.log(latt);});
+
+
+
+    console.log(document.getElementById("latt"));
+
+    // ltRef.on('value', snap => {
+    //     preObject.innerText = JSON.stringify(snap.val(),null,3);
+    // });
+
+    // ltRef.on('value', snap => demo.innerHTML = snap.val());
+    // ltRef.on('value', snap => {
+    //     preObject.innerText = JSON.stringify(snap.val(),null,3);
+    // });
+</script>
+
 
 
 <div id="wrapper">
