@@ -218,21 +218,21 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         <div class="card-body" id="map">
                             <!--    지도 넣기    -->
 
-                            <?php
-                            $list_result = mysqli_query($conn, 'SELECT * FROM tb_map');
-                            if ($num) {
-                                for ($i = 0; $i < $num; $i++) {
-                                    $row = mysqli_fetch_array($list_result);
-                                }
-                                $lat = $row['lat'];
-//                                            echo "<br>";
-                                $lng = $row['lng'];
-//                                echo $row['lat'], $row['lng'];
-                            } else {
-                                $lat = '35.8774';
-                                $lng = '128.73';
-                            }
-                            ?>
+<!--                            --><?php
+//                            $list_result = mysqli_query($conn, 'SELECT * FROM tb_map');
+//                            if ($num) {
+//                                for ($i = 0; $i < $num; $i++) {
+//                                    $row = mysqli_fetch_array($list_result);
+//                                }
+//                                $lat = $row['lat'];
+////                                            echo "<br>";
+//                                $lng = $row['lng'];
+////                                echo $row['lat'], $row['lng'];
+//                            } else {
+//                                $lat = '35.8774';
+//                                $lng = '128.73';
+//                            }
+//                            ?>
 
 
                             <div id="googleMap" style="width: 100%; height: 600px;"></div>
@@ -245,8 +245,8 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                     // var lng = '';
                                     // lng = $("#lng").val();
 
-                                    var lat = "<?php echo $lat; ?>";
-                                    var lng = "<?php echo $lng; ?>";
+                                    //var lat = "<?php //echo $lat; ?>//";
+                                    //var lng = "<?php //echo $lng; ?>//";
 
                                     // var demolatt = getLat();
                                     // var demolngg = getLng();
@@ -350,7 +350,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
                                     // const kidname = document.createElement("div");
                                     // kidname.className = "kidname";
-                                    // kidname.textContent = String("<?php echo $kid; ?>");
+                                    // kidname.textContent = String("<?php //echo $kid; ?>//");
 
                                     // var marker = new google.maps.Marker({
                                     //     map: map,
