@@ -73,10 +73,12 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 </head>
 <body>
 
-파이어베이스 실시간으로 웹페이지 연동하기 </br>
-Firebase + Realtime + Web
-<p id="demo">A Paragraph.</p>
-<pre id="object"></pre>
+<!--파이어베이스 실시간으로 웹페이지 연동하기 </br>-->
+<!--Firebase + Realtime + Web-->
+<!--<p id="demolat"></p>-->
+<!--<p id="demolng"></p>-->
+<!--<pre id="object"></pre>-->
+<!--<button type="button" onclick="getLat()">데이터 쓰기</button>-->
 
 <script>
     const firebaseConfig = {
@@ -92,25 +94,62 @@ Firebase + Realtime + Web
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    var storage = firebase.storage();
+    var storageRef = storage.ref();
+
+    storageRef.child("my_folder/winter.png").getDownloadURL()
+        .then((url) => {
+            // `url` is the download URL for 'images/stars.jpg'
+
+            // This can be downloaded directly:
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = (event) => {
+                var blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+            // Or inserted into an <img> element
+            var img = document.getElementById('my img1');
+            img.setAttribute('src', url);
+        })
+        .catch((error) => {
+            // Handle any errors
+        });
+    storageRef.child("my_folder/AA134HmM.png").getDownloadURL()
+        .then((url) => {
+            // `url` is the download URL for 'images/stars.jpg'
+
+            // This can be downloaded directly:
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = (event) => {
+                var blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+            // Or inserted into an <img> element
+            var img = document.getElementById('my img2');
+            img.setAttribute('src', url);
+        })
+        .catch((error) => {
+            // Handle any errors
+        });
+
     // firebase에서 읽기
-    var demo = document.getElementById("demo");
-    var preObject = document.getElementById("object");
     var ltRef = firebase.database().ref("test/Latitude"); //.child("test/Latitude");
+    var lnRef = firebase.database().ref("test/Longitude");
 
-    latt = 36;
-
-    console.log();
-
-    ltRef.on('value', snap => {demo.innerHTML = snap.val(); console.log(demo); latt = snap.val(); console.log(latt);});
+    // ltRef.on('value', snap => {demolat.innerHTML = snap.val(); console.log(demolat.innerText);});
+    // lnRef.on('value', snap => {demolng.innerHTML = snap.val(); console.log(demolng.innerText);});
 
 
     // ltRef.on('value', snap => {demo.innerHTML = snap.val(); console.log(demo); latt = snap.val(); console.log(latt);});
 
     // onValue(ltRef, (snapshot) => {demo.innerHTML = snap.val(); console.log(demo); latt = snap.val(); console.log(latt);});
 
-
-
-    console.log(document.getElementById("latt"));
+    // console.log(latt);
 
     // ltRef.on('value', snap => {
     //     preObject.innerText = JSON.stringify(snap.val(),null,3);
@@ -209,15 +248,76 @@ Firebase + Realtime + Web
                                     var lat = "<?php echo $lat; ?>";
                                     var lng = "<?php echo $lng; ?>";
 
-                                    var gps = {lat: Number(lat), lng: Number(lng)};
+                                    // var demolatt = getLat();
+                                    // var demolngg = getLng();
 
-                                    var mapOptions = {
-                                        center: gps,
-                                        zoom:18,
-                                        mapId: "d3378d8bba3dcdc7",
-                                    };
+                                    ltRef.on('value', snap => {
+                                        demolatt = snap.val();
+                                        lnRef.on('value', snap => {
+                                            demolngg = snap.val();
 
-                                    var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions,);
+                                            var gps = {lat: Number(demolatt), lng: Number(demolngg)};
+
+                                            var mapOptions = {
+                                                center: gps,
+                                                zoom:18,
+                                                mapId: "d3378d8bba3dcdc7",
+                                            };
+
+                                            var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions,);
+
+                                            const contentString = '<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">현재 위치</div><div><?php
+                                                $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                                if ($num) {
+                                                    for ($i = 0; $i < $num; $i++) {
+                                                        $row = mysqli_fetch_array($list_result);
+                                                    }
+                                                    $kid = $row['kid_nm'];
+                                                } else {
+                                                    $kid = "현재 위치";
+                                                }
+                                                echo $kid;
+                                                ?></div></div>';
+
+                                            const kidname = document.createElement("div");
+                                            kidname.className = "kidname";
+                                            kidname.textContent = String("<?php echo $kid; ?>");
+
+                                            const marker2 = new google.maps.marker.AdvancedMarkerView({
+                                                map: map,
+                                                position: gps,
+                                                title: "현재 위치",
+                                                content: kidname,
+                                            });
+
+                                            var infowindow = new google.maps.InfoWindow({
+                                                content: contentString,
+                                                position: gps,
+                                            });
+
+                                            marker2.addListener("click", () => {
+                                                infowindow.open({
+                                                    anchor: marker2,
+                                                    map,
+                                                });
+                                            });
+
+                                        });
+
+                                    });
+
+                                    console.log(demolatt);
+                                    console.log(demolngg);
+
+                                    // var gps = {lat: Number(lat), lng: Number(lng)};
+
+                                    // var mapOptions = {
+                                    //     center: gps,
+                                    //     zoom:18,
+                                    //     mapId: "d3378d8bba3dcdc7",
+                                    // };
+
+                                    // var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions,);
 
                                     // var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions, mapId: "d3378d8bba3dcdc7");
 
@@ -235,22 +335,22 @@ Firebase + Realtime + Web
                                     //    }
                                     //    ?>//</div></div>';
 
-                                    const contentString = '<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">현재 위치</div><div><?php
-                                        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
-                                        if ($num) {
-                                            for ($i = 0; $i < $num; $i++) {
-                                                $row = mysqli_fetch_array($list_result);
-                                            }
-                                            $kid = $row['kid_nm'];
-                                        } else {
-                                            $kid = "현재 위치";
-                                        }
-                                        echo $kid;
-                                        ?></div></div>';
+                                    // const contentString = '<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">현재 위치</div><div><?php
+                                    //     $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                    //     if ($num) {
+                                    //         for ($i = 0; $i < $num; $i++) {
+                                    //             $row = mysqli_fetch_array($list_result);
+                                    //         }
+                                    //         $kid = $row['kid_nm'];
+                                    //     } else {
+                                    //         $kid = "현재 위치";
+                                    //     }
+                                    //     echo $kid;
+                                    //     ?></div></div>';
 
-                                    const kidname = document.createElement("div");
-                                    kidname.className = "kidname";
-                                    kidname.textContent = String("<?php echo $kid; ?>");
+                                    // const kidname = document.createElement("div");
+                                    // kidname.className = "kidname";
+                                    // kidname.textContent = String("<?php echo $kid; ?>");
 
                                     // var marker = new google.maps.Marker({
                                     //     map: map,
@@ -258,24 +358,24 @@ Firebase + Realtime + Web
                                     //     title: "현재 위치",
                                     // });
 
-                                    const marker2 = new google.maps.marker.AdvancedMarkerView({
-                                        map: map,
-                                        position: gps,
-                                        title: "현재 위치",
-                                        content: kidname,
-                                    });
+                                    // const marker2 = new google.maps.marker.AdvancedMarkerView({
+                                    //     map: map,
+                                    //     position: gps,
+                                    //     title: "현재 위치",
+                                    //     content: kidname,
+                                    // });
 
-                                    var infowindow = new google.maps.InfoWindow({
-                                        content: contentString,
-                                        position: gps,
-                                    });
+                                    // var infowindow = new google.maps.InfoWindow({
+                                    //     content: contentString,
+                                    //     position: gps,
+                                    // });
 
-                                    marker2.addListener("click", () => {
-                                        infowindow.open({
-                                            anchor: marker2,
-                                            map,
-                                        });
-                                    });
+                                    // marker2.addListener("click", () => {
+                                    //     infowindow.open({
+                                    //         anchor: marker2,
+                                    //         map,
+                                    //     });
+                                    // });
                                 }
                             </script>
                             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApykNjXopqxczFpW4EfkZIwMm5y9ms0B8&callback=myMap&libraries=marker&v=beta"></script>
@@ -301,7 +401,13 @@ Firebase + Realtime + Web
                         </div>
                         <div class="card-body" style="text-align: center;">
                             <div>
-                                place for child's photo <br>
+                                <!--사진 들어가는 자리 -->
+                                <img id = 'my img1'  alt="123" src="" width="200px" height="300px">
+                                <img id = 'my img2'  alt="123" src="" width="200px" height="300px">
+                                <!--사진 들어가는 자리 -->
+
+                                <br>
+
                                 <?php
                                 $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                 if ($num) {
