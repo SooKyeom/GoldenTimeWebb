@@ -53,11 +53,11 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             width: 100%;
             height: 100%;
             margin-top: 20px;
-            border: 1px solid #EEEEEE;
+            border: 2px solid #EEEEEE;
         }
         td {
             padding: 10px;
-            border: 1px solid #EEEEEE;
+            border: 2px solid #EEEEEE;
         }
         .kidname {
             background-color: #594A34;
@@ -108,8 +108,24 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
     var storage = firebase.storage();
     var storageRef = storage.ref();
+    var picnm = "<?php
 
-    storageRef.child("my_folder/winter.png").getDownloadURL()
+        $numb = (string) $_SERVER['REQUEST_URI'];
+        $num = substr($numb, 14, 2);
+
+        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+        if ($num) {
+            for ($i = 0; $i < $num; $i++) {
+                $row = mysqli_fetch_array($list_result);
+            }
+            $kid = $row['kid_nm'];
+        } else {
+            $kid = "winter";
+        }
+        echo $kid;
+        ?>";
+
+    storageRef.child("my_folder/" + picnm + ".png").getDownloadURL()
         .then((url) => {
             // `url` is the download URL for 'images/stars.jpg'
 
@@ -182,6 +198,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
         <hr class="sidebar-divide">
 
         <?php
+        $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
         while ($row = mysqli_fetch_array($list_result)) {
             if (strlen($row['kid_sn']) == 1) {
                 echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-00' . $row['kid_sn'] . "</div></a>";
@@ -190,8 +207,8 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             }
 //            echo "<hr class='sidebar-divide'>";
         }
-        $numb = (string) $_SERVER['REQUEST_URI'];
-        $num = substr($numb, 14, 2);
+        //        $numb = (string) $_SERVER['REQUEST_URI'];
+        //        $num = substr($numb, 14, 2);
         ?>
 
         <!--        <a class="sidebar-brand">-->
@@ -426,7 +443,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         <div class="card-body" style="text-align: center;">
                             <div>
                                 <!--사진 들어가는 자리 -->
-                                <img id = 'my img1'  alt="123" src="" width="69%" height="69%">
+                                <img id = 'my img1'  alt="123" src="" width="69%">
                                 <!--<img id = 'my img2'  alt="123" src="" width="200px" height="300px">-->
                                 <!--사진 들어가는 자리 -->
 
