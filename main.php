@@ -19,11 +19,11 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
     <style>
         #sideBar {
-            background-color: #6c93f3; width: 200px; min-height: 100vh; position: relative; display: flex; flex-direction: column; padding-right: 0; margin-top: 0; margin-bottom: 0; list-style: none; float: right;
+            background-color: #FFD495; width: 200px; min-height: 100vh; position: relative; display: flex; flex-direction: column; padding-right: 0; margin-top: 0; margin-bottom: 0; list-style: none; float: right;
         }
         .sidebar-brand {
             text-decoration: none;
-            color: white;
+            color: #594A34;
             font-size: 1rem;
             font-weight: 800;
             padding: 1.5rem 1rem;
@@ -32,6 +32,10 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             letter-spacing: 0.05rem;
             z-index: 1;
         }
+        a:hover {
+            background-color: #DFB475;
+
+        }
         .sidebar-divide {
             margin: 0 1rem 1rem;
         }
@@ -39,17 +43,24 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             position: relative; display: flex; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid #e3e6f0; border-radius: 0.35rem;
         }
         .card-head {
-            padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: #f8f9fc; border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: #FFFBAC; border-bottom: 1px solid #e3e6f0;
         }
         .card-body {
             flex: 1 1 auto; min-height: 1px; padding: 1.25rem;
         }
         .table {
-            border-collapse: collapse;width: 100%;
+            border-collapse: collapse;
+            width: 100%;
             height: 100%;
+            margin-top: 20px;
+            border: 1px solid #EEEEEE;
+        }
+        td {
+            padding: 10px;
+            border: 1px solid #EEEEEE;
         }
         .kidname {
-            background-color: #4285F4;
+            background-color: #594A34;
             border-radius: 8px;
             color: #FFFFFF;
             font-size: 14px;
@@ -66,7 +77,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             height: 0;
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
-            border-top: 8px solid #4285F4;
+            border-top: 8px solid #594A34;
         }
     </style>
 
@@ -172,7 +183,11 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
         <?php
         while ($row = mysqli_fetch_array($list_result)) {
-            echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>".'GT-00'.$row['kid_sn']."</div></a>";
+            if (strlen($row['kid_sn']) == 1) {
+                echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-00' . $row['kid_sn'] . "</div></a>";
+            } else if (strlen($row['kid_sn']) == 2) {
+                echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-0' . $row['kid_sn'] . "</div></a>";
+            }
 //            echo "<hr class='sidebar-divide'>";
         }
         $numb = (string) $_SERVER['REQUEST_URI'];
@@ -199,8 +214,9 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
         } else {
             ?>
 
-            <button class="nav-link" style="float: right; margin-right: 20px" onclick="login()">로그인</button>
-            <button class="nav-link active" style="float: right; margin-right: 10px" onclick="register()">회원가입</button>
+            <button class="nav-link" style=" float: right;margin-right: 2%"" onclick="login()">로그인</button>
+            <button class="nav-link active" style=" float: right;margin-right: 1%"" onclick="register()">회원가입</button>
+            <br>
 
 
             <?php
@@ -218,21 +234,21 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         <div class="card-body" id="map">
                             <!--    지도 넣기    -->
 
-<!--                            --><?php
-//                            $list_result = mysqli_query($conn, 'SELECT * FROM tb_map');
-//                            if ($num) {
-//                                for ($i = 0; $i < $num; $i++) {
-//                                    $row = mysqli_fetch_array($list_result);
-//                                }
-//                                $lat = $row['lat'];
-////                                            echo "<br>";
-//                                $lng = $row['lng'];
-////                                echo $row['lat'], $row['lng'];
-//                            } else {
-//                                $lat = '35.8774';
-//                                $lng = '128.73';
-//                            }
-//                            ?>
+                            <!--                            --><?php
+                            //                            $list_result = mysqli_query($conn, 'SELECT * FROM tb_map');
+                            //                            if ($num) {
+                            //                                for ($i = 0; $i < $num; $i++) {
+                            //                                    $row = mysqli_fetch_array($list_result);
+                            //                                }
+                            //                                $lat = $row['lat'];
+                            ////                                            echo "<br>";
+                            //                                $lng = $row['lng'];
+                            ////                                echo $row['lat'], $row['lng'];
+                            //                            } else {
+                            //                                $lat = '35.8774';
+                            //                                $lng = '128.73';
+                            //                            }
+                            //                            ?>
 
 
                             <div id="googleMap" style="width: 100%; height: 600px;"></div>
@@ -252,8 +268,10 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                     // var demolngg = getLng();
 
                                     ltRef.on('value', snap => {
+                                        // latitude 받아오기
                                         demolatt = snap.val();
                                         lnRef.on('value', snap => {
+                                            // longitude 받아오기
                                             demolngg = snap.val();
 
                                             var gps = {lat: Number(demolatt), lng: Number(demolngg)};
@@ -261,11 +279,13 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                             var mapOptions = {
                                                 center: gps,
                                                 zoom:18,
-                                                mapId: "d3378d8bba3dcdc7",
+                                                mapId: "db7a84d7f27c7b70",
                                             };
 
+                                            // Google Map 출력
                                             var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions,);
 
+                                            // 순번에 맞는 아동 이름 찾기
                                             const contentString = '<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">현재 위치</div><div><?php
                                                 $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                                 if ($num) {
@@ -279,10 +299,12 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                                 echo $kid;
                                                 ?></div></div>';
 
+                                            // 아동 이름을 변수에 저장
                                             const kidname = document.createElement("div");
                                             kidname.className = "kidname";
                                             kidname.textContent = String("<?php echo $kid; ?>");
 
+                                            // 아동 이름을 출력하는 마커 생성
                                             const marker2 = new google.maps.marker.AdvancedMarkerView({
                                                 map: map,
                                                 position: gps,
@@ -290,11 +312,13 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                                 content: kidname,
                                             });
 
+                                            // 마커를 클릭하면 나타날 정보 작성
                                             var infowindow = new google.maps.InfoWindow({
                                                 content: contentString,
                                                 position: gps,
                                             });
 
+                                            // 마커를 클릭하면 정보창 출력
                                             marker2.addListener("click", () => {
                                                 infowindow.open({
                                                     anchor: marker2,
@@ -306,8 +330,8 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
                                     });
 
-                                    console.log(demolatt);
-                                    console.log(demolngg);
+                                    // console.log(demolatt);
+                                    // console.log(demolngg);
 
                                     // var gps = {lat: Number(lat), lng: Number(lng)};
 
@@ -402,27 +426,27 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                         <div class="card-body" style="text-align: center;">
                             <div>
                                 <!--사진 들어가는 자리 -->
-                                <img id = 'my img1'  alt="123" src="" width="200px" height="300px">
-                                <img id = 'my img2'  alt="123" src="" width="200px" height="300px">
+                                <img id = 'my img1'  alt="123" src="" width="69%" height="69%">
+                                <!--<img id = 'my img2'  alt="123" src="" width="200px" height="300px">-->
                                 <!--사진 들어가는 자리 -->
 
                                 <br>
-
-                                <?php
-                                $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
-                                if ($num) {
-                                    for ($i = 0; $i < $num; $i++) {
-                                        $row = mysqli_fetch_array($list_result);
-                                    }
-//                                    echo $row['upload'];
-                                    /*                                    $src = "D:/xampp/htdocs/images/<?=".$row['image_name']."?>";*/
-//                                    Header("Content-type:image/jpeg");
-                                    echo $row['kid_nm'];
-//                                    echo $row['upload'];
-                                } else {
-                                    echo "사진 없음";
-                                }
-                                ?>
+                                <!---->
+                                <!--                                --><?php
+                                //                                $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
+                                //                                if ($num) {
+                                //                                    for ($i = 0; $i < $num; $i++) {
+                                //                                        $row = mysqli_fetch_array($list_result);
+                                //                                    }
+                                ////                                    echo $row['upload'];
+                                /*                                    $src = "D:/xampp/htdocs/images/<?=".$row['image_name']."?>";*/
+                                ////                                    Header("Content-type:image/jpeg");
+                                //                                    echo $row['kid_nm'];
+                                ////                                    echo $row['upload'];
+                                //                                } else {
+                                //                                    echo "사진 없음";
+                                //                                }
+                                //                                ?>
                             </div>
                             <table class="table">
                                 <tr>
@@ -479,9 +503,9 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                             $bday = (string)$row['kid_bir'];
                                             echo substr($bday, 0, 4);
                                             echo "년 ";
-                                            echo substr($bday, 5, 2);
+                                            echo substr($bday, 4, 2);
                                             echo '월 ';
-                                            echo substr($bday, 8, 2);
+                                            echo substr($bday, 6, 2);
                                             echo '일';
                                         } else {
                                             echo "생년월일";
