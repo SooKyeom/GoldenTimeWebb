@@ -18,8 +18,17 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
     <script src="https://www.gstatic.com/firebasejs/7.2/firebase.js"></script>
 
     <style>
+        @font-face {
+            font-family: 'maplestory';
+            /*src: url("./font/Maplestory Light.ttf");*/
+            /*src: url("./font/BMJUA_ttf.ttf");*/
+            src: url("./font/NanumBarunGothic.ttf");
+        }
+        * {
+            font-family: 'maplestory';
+        }
         #sideBar {
-            background-color: #FFD495; width: 200px; min-height: 100vh; position: relative; display: flex; flex-direction: column; padding-right: 0; margin-top: 0; margin-bottom: 0; list-style: none; float: right;
+            background-color: #D7E9B9; width: 200px; min-height: 100vh; position: relative; display: flex; flex-direction: column; padding-right: 0; margin-top: 0; margin-bottom: 0; list-style: none; float: right;
         }
         .sidebar-brand {
             text-decoration: none;
@@ -33,7 +42,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
             z-index: 1;
         }
         a:hover {
-            background-color: #DFB475;
+            background-color: #B7C999;
 
         }
         .sidebar-divide {
@@ -115,12 +124,17 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 
         $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
         if ($num) {
-            for ($i = 0; $i < $num; $i++) {
-                $row = mysqli_fetch_array($list_result);
-            }
-            $kid = $row['kid_nm'];
+            $kid = "null";
+//            for ($i = 0; $i < $num; $i++) {
+//                $row = mysqli_fetch_array($list_result);
+//            }
+//            $kid = $row['kid_nm'];
+//            $kid = $row['kid_nfc'];
         } else {
-            $kid = "winter";
+            $kid = "muji4";
+        }
+        if ($num == 0) {
+            $kid = "null";
         }
         echo $kid;
         ?>";
@@ -193,7 +207,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
 <div id="wrapper">
     <div id="sideBar"> <!-- SideBar -->
         <a class="sidebar-brand" href="main.php">
-            <div>미아위치확인시스템</div>
+            <div><b>미아위치확인시스템</b></div>
         </a>
         <hr class="sidebar-divide">
 
@@ -201,6 +215,11 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
         $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
         while ($row = mysqli_fetch_array($list_result)) {
             if (strlen($row['kid_sn']) == 1) {
+//                if ($row['kid_sn'] == 3) {
+//                    echo "<a class='sidebar-brand' style='background-color: red' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-00' . $row['kid_sn'] . "</div></a>";
+//                } else {
+//                    echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-00' . $row['kid_sn'] . "</div></a>";
+//                }
                 echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-00' . $row['kid_sn'] . "</div></a>";
             } else if (strlen($row['kid_sn']) == 2) {
                 echo "<a class='sidebar-brand' href=\"?kid={$row['kid_sn']}\"><div>" . 'GT-0' . $row['kid_sn'] . "</div></a>";
@@ -246,7 +265,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                 <div style="flex: 0 0 68%; max-width: 68%;">
                     <div class="card" style="margin-bottom: 10px;">
                         <div class="card-head">
-                            GPS 위치 확인
+                            <b>GPS 위치 확인</b>
                         </div>
                         <div class="card-body" id="map">
                             <!--    지도 넣기    -->
@@ -290,6 +309,16 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                         lnRef.on('value', snap => {
                                             // longitude 받아오기
                                             demolngg = snap.val();
+
+                                            <?php
+                                            if ($num) {
+                                        } else {
+                                            ?>
+                                            demolatt = 35.87745;
+                                            demolngg = 128.736;
+                                            <?php
+                                            }
+                                            ?>
 
                                             var gps = {lat: Number(demolatt), lng: Number(demolngg)};
 
@@ -425,7 +454,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                     </div>
                     <div class="card">
                         <div class="card-head">
-                            CCTV 화면 확인
+                            <b>CCTV 화면 확인</b>
                         </div>
                         <div class="card-body">
                             <iframe width="100%" height="600px" src="https://www.youtube.com/embed/GDzBj6gzqHw?autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -438,12 +467,12 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                 <div style="flex: 0 0 30%; max-width: 30%;">
                     <div class="card">
                         <div class="card-head">
-                            아동 정보 확인
+                            <b>아동 정보 확인</b>
                         </div>
                         <div class="card-body" style="text-align: center;">
                             <div>
                                 <!--사진 들어가는 자리 -->
-                                <img id = 'my img1'  alt="123" src="" width="69%">
+                                <img id = 'my img1'  alt="123" src="" width="77%">
                                 <!--<img id = 'my img2'  alt="123" src="" width="200px" height="300px">-->
                                 <!--사진 들어가는 자리 -->
 
@@ -508,7 +537,7 @@ $list_result = mysqli_query($conn, 'SELECT * FROM tb_kid');
                                 </tr>
                                 <tr>
                                     <td>
-                                        생년월일
+                                        나이
                                     </td>
                                     <td>
                                         <?php
